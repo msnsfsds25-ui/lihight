@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>두근두근 파스텔 가챠</title>
+
+    <!-- [1. 앱 아이콘 & 파비콘 설정] -->
+    <link rel="icon" type="image/png" href="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=200">
+    <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=200">
+
+    <!-- [2. 카카오톡 / SNS 공유 시 미리보기 카드 설정] -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="치이가 준비한 게 있대…">
+    <meta property="og:description" content="여기를 눌러서 나만의 귀여운 가챠를 뽑아보세요!">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+        body {
+            background: linear-gradient(135deg, #fff0f5 0%, #f8f0ff 100%);
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+        }
+
+        /* 우측 상단 네비게이션 UI */
+        .top-nav {
+            position: fixed;
+            top: 16px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+            z-index: 20;
+        }
+        .nav-btn {
+            background: #ffffff;
+            border: 2px solid #ffb6c1;
+            padding: 8px 15px;
+            border-radius: 22px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 182, 193, 0.35);
+            transition: all 0.2s;
+            color: #ff5e99;
+        }
+        .nav-btn:hover {
+            background: #fff0f5;
+            transform: translateY(-2px);
+        }
+
+        /* 메인 컨테이너 (스크롤 없이 한 화면) */
+        .main-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        /* 가챠 머신 본체 */
+        .gacha-machine {
+            width: 380px;
+            max-width: 92vw;
+            height: 680px;
+            max-height: 88vh;
+            background: #ffffff;
+            border: 6px solid #ffb6c1;
+            border-radius: 40px;
+            box-shadow: 0 18px 40px rgba(255, 150, 180, 0.35), inset 0 0 15px rgba(255, 230, 238, 0.8);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .machine-header-bar {
+            height: 22px;
+            background: linear-gradient(90deg, #ff9ebb, #d8b4fe, #ff9ebb);
+            border-bottom: 3px solid #ffb6c1;
+            flex-shrink: 0;
+        }
+
+        /* 1. 상단 투명 포스터 케이스 영역 */
+        .top-display {
+            width: 100%;
+            height: 39%;
+            background: radial-gradient(circle at center, #fff5f8 0%, #ffe0ea 100%);
+            border-bottom: 6px solid #ffb6c1;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .top-display::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%);
+            pointer-events: none;
+        }
+        .top-display img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .top-display-placeholder {
+            text-align: center;
+            color: #ff6b9d;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* 2. 하단 본체 영역 */
+        .bottom-body {
+            flex: 1;
+            background: #ffffff;
+            position: relative;
+            padding: 18px;
+        }
+
+        /* 우측 상단 동전 투입구 & 잔액 표시 */
+        .coin-slot-box {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            width: 72px;
+            height: 76px;
+            background: #f8f9fa;
+            border: 3px solid #e2e8f0;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.06);
+        }
+        .coin-slot {
+            width: 38px;
+            height: 6px;
+            background: #2d3748;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+        .coin-slot-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: #ff5e99;
+        }
+
+        /* 중앙 회전 레버 (배출구와 안 겹치게 상단 중앙 쪽 배치) */
+        .lever-container {
+            position: absolute;
+            top: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            background: #fdf2f8;
+            border: 6px solid #b794f4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(183, 148, 244, 0.35), inset 0 3px 8px rgba(255,255,255,0.9);
+            transition: transform 0.15s;
+            z-index: 4;
+        }
+        .lever-container:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+        .lever-handle {
+            width: 88px;
+            height: 32px;
+            background: linear-gradient(180deg, #ffffff 0%, #f3e8ff 100%);
+            border: 4px solid #9f7aea;
+            border-radius: 18px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            transition: transform 0.12s linear;
+        }
+
+        /* 왼쪽 하단 캡슐 배출구 */
+        .dispenser-area {
+            position: absolute;
+            bottom: 18px;
+            left: 22px;
+            width: 112px;
+            height: 112px;
+            background: #2d3748;
+            border-radius: 50%;
+            border: 6px solid #edf2f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: inset 0 12px 24px rgba(0,0,0,0.75);
+            z-index: 5;
+        }
+
+        /* 배출구 안의 캡슐 */
+        .capsule {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+            box-shadow: inset -6px -6px 16px rgba(0,0,0,0.28), 0 5px 10px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: dropCapsule 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            z-index: 10;
+        }
+        .capsule::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            top: 50%;
+            background: rgba(0,0,0,0.07);
+            border-top: 2px dashed rgba(255,255,255,0.8);
+        }
+        .capsule:hover {
+            transform: scale(1.08);
+        }
+
+        @keyframes dropCapsule {
+            0% { transform: translateY(-80px) scale(0.4); opacity: 0; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        /* 모달 공통 스타일 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(3px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 28px;
+            width: 350px;
+            max-width: 92%;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 4px solid #ffb6c1;
+            position: relative;
+        }
+        .modal-content h3 {
+            margin-bottom: 14px;
+            color: #ff5e99;
+            font-size: 18px;
+        }
+        .close-btn {
+            background: #ff69b4;
+            color: white;
+            border: none;
+            padding: 9px 22px;
+            border-radius: 18px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 12px;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.3);
+        }
+
+        /* 캡슐 열림 연출 */
+        .capsule-open-stage {
+            position: relative;
+            width: 210px;
+            height: 220px;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .capsule-half-top {
+            position: absolute;
+            top: 15px;
+            width: 130px;
+            height: 65px;
+            border-radius: 65px 65px 0 0;
+            z-index: 3;
+            box-shadow: inset -5px 5px 12px rgba(255,255,255,0.6);
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s;
+        }
+        .capsule-half-bottom {
+            position: absolute;
+            bottom: 15px;
+            width: 130px;
+            height: 65px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 3px solid #ffb6c1;
+            border-radius: 0 0 65px 65px;
+            z-index: 3;
+            box-shadow: inset -5px -5px 12px rgba(0,0,0,0.1);
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s;
+        }
+        .capsule-open-stage.opened .capsule-half-top {
+            transform: translateY(-65px) rotate(-15deg);
+            opacity: 0.25;
+        }
+        .capsule-open-stage.opened .capsule-half-bottom {
+            transform: translateY(65px) rotate(12deg);
+            opacity: 0.25;
+        }
+        .result-reveal-box {
+            width: 165px;
+            height: 165px;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: scale(0.2);
+            opacity: 0;
+            transition: all 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s;
+        }
+        .capsule-open-stage.opened .result-reveal-box {
+            transform: scale(1);
+            opacity: 1;
+        }
+        .result-reveal-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 6px 12px rgba(255, 105, 180, 0.35));
+        }
+
+        /* 보관함 아이템 & 크게 보기 */
+        .inven-item-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff4f7;
+            padding: 8px 12px;
+            border-radius: 14px;
+            border: 1.5px solid #ffb6c1;
+            cursor: pointer;
+            transition: transform 0.15s, background 0.15s;
+        }
+        .inven-item-card:hover {
+            background: #ffe6ee;
+            transform: scale(1.02);
+        }
+        .zoom-image-box {
+            width: 260px;
+            height: 260px;
+            margin: 12px auto;
+            background: #fff9fb;
+            border: 3px dashed #ffb6c1;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 10px;
+        }
+        .zoom-image-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.12));
+        }
+
+        /* 관리자 탭 & 폼 */
+        .admin-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .admin-tab-btn {
+            flex: 1;
+            padding: 7px;
+            border-radius: 10px;
+            border: 1.5px solid #ffb6c1;
+            background: #fff9fb;
+            color: #ff5e99;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .admin-tab-btn.active {
+            background: #ff69b4;
+            color: #ffffff;
+        }
+        .admin-form-group {
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .admin-form-group label {
+            font-size: 11px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+            color: #666;
+        }
+        .admin-form-group input {
+            width: 100%;
+            padding: 7px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+        .admin-item-row {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 6px;
+            align-items: center;
+        }
+        .log-list {
+            max-height: 210px;
+            overflow-y: auto;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .log-row {
+            background: #fff8fa;
+            border: 1px solid #ffd6e0;
+            border-radius: 10px;
+            padding: 8px 10px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        .log-time {
+            color: #888;
+            font-size: 11px;
+            display: block;
+        }
+        .log-item {
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <button class="nav-btn" onclick="addCoin()">🪙 코인 충전</button>
+        <button class="nav-btn" onclick="openInventory()">보관함 (<span id="inven-count">0</span>)</button>
+        <button class="nav-btn" onclick="requestAdminAuth()">관리자</button>
+    </div>
+
+    <div class="main-container">
+        <div class="gacha-machine">
+            <div class="machine-header-bar"></div>
+
+            <div class="top-display" id="topDisplayArea" onclick="requestAdminAuth()">
+                <div class="top-display-placeholder" id="topPlaceholder">
+                    🎀 [관리자 모드] 🎀<br>여기를 눌러 상단 포스터 이미지를 설정하세요!<br><span style="font-size:11px; color:#aaa;">(초기 비밀번호: 1234)</span>
+                </div>
+            </div>
+
+            <div class="bottom-body">
+                <div class="coin-slot-box">
+                    <div class="coin-slot"></div>
+                    <div class="coin-slot-label" id="coinDisplay">COIN: 28</div>
+                </div>
+
+                <div class="lever-container" id="lever" onclick="pullGacha()" title="레버를 돌려 뽑기!">
+                    <div class="lever-handle" id="leverHandle"></div>
+                </div>
+
+                <div class="dispenser-area" id="dispenser">
+                    <span style="color: #a0aec0; font-size: 11px; font-weight: bold;">DISPENSER</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 캡슐 오픈 결과 모달 -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <h3>✨ 캡슐이 열렸어요! ✨</h3>
+            <div class="capsule-open-stage" id="capsuleStage">
+                <div class="capsule-half-top" id="capTop"></div>
+                <div class="result-reveal-box">
+                    <img id="resultImage" src="" alt="결과 이미지">
+                </div>
+                <div class="capsule-half-bottom"></div>
+            </div>
+            <p id="resultName" style="font-weight: bold; font-size: 16px; color: #333; margin-top: 5px;"></p>
+            <button class="close-btn" onclick="closeResultModal()">보관함에 담기</button>
+        </div>
+    </div>
+
+    <!-- 보관함 모달 -->
+    <div class="modal" id="invenModal">
+        <div class="modal-content">
+            <h3>🎒 내 보관함</h3>
+            <p style="font-size: 11px; color: #999; margin-top: -8px; margin-bottom: 10px;">아이템을 누르면 크게 볼 수 있어요!</p>
+            <div id="inventoryList" style="max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 5px;">
+                <p style="color: #888; font-size: 13px; margin: 20px 0;">아직 뽑은 상품이 없어요!</p>
+            </div>
+            <button class="close-btn" onclick="closeInventory()">닫기</button>
+        </div>
+    </div>
+
+    <!-- 보관함 이미지 크게 보기 모달 -->
+    <div class="modal" id="zoomModal" style="z-index: 150;" onclick="closeZoomModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 id="zoomTitle">상품 상세 보기</h3>
+            <div class="zoom-image-box">
+                <img id="zoomImage" src="" alt="크게 보기 이미지">
+            </div>
+            <button class="close-btn" onclick="closeZoomModal()">닫기</button>
+        </div>
+    </div>
+
+    <!-- 관리자 비밀번호 확인 모달 -->
+    <div class="modal" id="authModal">
+        <div class="modal-content" style="width: 300px;">
+            <h3>🔒 관리자 인증</h3>
+            <p style="font-size: 12px; color: #777; margin-bottom: 12px;">비밀번호를 입력해주세요. (초기: 1234)</p>
+            <input type="password" id="adminPwInput" placeholder="비밀번호 입력" style="width: 100%; padding: 10px; border: 2px solid #ffb6c1; border-radius: 10px; text-align: center; font-size: 15px;" onkeyup="if(event.key==='Enter') verifyAdminPw()">
+            <div style="display: flex; gap: 8px; justify-content: center; margin-top: 14px;">
+                <button class="close-btn" style="background: #cbd5e0; margin-top:0;" onclick="closeAuthModal()">취소</button>
+                <button class="close-btn" style="margin-top:0;" onclick="verifyAdminPw()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 관리자 설정 & 뽑기 기록 패널 모달 -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content" style="width: 390px;">
+            <h3>⚙️ 관리자 모드</h3>
+
+            <div class="admin-tabs">
+                <button class="admin-tab-btn active" id="tabBtnSettings" onclick="switchAdminTab('settings')">상품·포스터 설정</button>
+                <button class="admin-tab-btn" id="tabBtnLogs" onclick="switchAdminTab('logs')">뽑기 기록 (<span id="logCountBadge">0</span>)</button>
+            </div>
+
+            <div id="adminTabSettings">
+                <div class="admin-form-group">
+                    <label>관리자 비밀번호 변경</label>
+                    <input type="text" id="adminNewPwInput" placeholder="새 비밀번호">
+                </div>
+
+                <div class="admin-form-group">
+                    <label>상단 포스터 이미지 주소 (PNG/JPG URL)</label>
+                    <input type="text" id="adminPosterInput" placeholder="이미지 주소를 입력하세요">
+                </div>
+
+                <div class="admin-form-group">
+                    <label>가챠 상품 목록 (이름 및 PNG 결과 이미지 주소)</label>
+                    <div id="adminRewardList" style="max-height: 130px; overflow-y: auto; padding-right: 4px;"></div>
+                    <button onclick="addRewardRow()" style="margin-top: 6px; font-size: 11px; padding: 5px 10px; background:#ffb6c1; border:none; border-radius:6px; color:white; font-weight:bold; cursor:pointer;">+ 상품 추가</button>
+                </div>
+
+                <div style="display: flex; gap: 8px; justify-content: center; margin-top: 12px;">
+                    <button class="close-btn" style="background: #cbd5e0; margin-top:0;" onclick="closeAdmin()">닫기</button>
+                    <button class="close-btn" style="margin-top:0;" onclick="saveAdminSettings()">저장하기</button>
+                </div>
+            </div>
+
+            <div id="adminTabLogs" style="display: none;">
+                <p style="font-size: 11px; color: #888; margin-bottom: 8px;">이 브라우저에서 뽑은 시각과 항목 기록입니다.</p>
+                <div class="log-list" id="adminLogList"></div>
+                <div style="display: flex; gap: 8px; justify-content: center; margin-top: 12px;">
+                    <button class="close-btn" style="background: #cbd5e0; margin-top:0;" onclick="closeAdmin()">닫기</button>
+                    <button class="close-btn" style="background: #ff85a1; margin-top:0;" onclick="clearPullLogs()">기록 비우기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            try {
+                if (!audioCtx && AudioCtx) audioCtx = new AudioCtx();
+                if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            } catch (e) {}
+        }
+
+        function playCoinSound() {
+            initAudio();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            [1400, 2100].forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + i * 0.06);
+                gain.gain.setValueAtTime(0.15, now + i * 0.06);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.25);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + i * 0.06);
+                osc.stop(now + i * 0.06 + 0.25);
+            });
+        }
+
+        function playRatchetClickSound(pitchMultiplier) {
+            initAudio();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(220 * (pitchMultiplier || 1), now);
+            osc.frequency.exponentialRampToValueAtTime(65, now + 0.045);
+
+            gain.gain.setValueAtTime(0.28, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.045);
+        }
+
+        function playDropSound() {
+            initAudio();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(320, now);
+            osc.frequency.exponentialRampToValueAtTime(140, now + 0.12);
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.12);
+        }
+
+        function playOpenCapsuleSound() {
+            initAudio();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+                gain.gain.setValueAtTime(0.14, now + idx * 0.07);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.35);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + idx * 0.07);
+                osc.stop(now + idx * 0.07 + 0.35);
+            });
+        }
+
+        const LOG_STORAGE_KEY = 'pastel_gacha_pull_logs_v1';
+
+        let coinCount = 28;
+        let adminPassword = "1234";
+        let posterUrl = "";
+        let rewards = [
+            { name: "시나모롤 마스코트 A", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300" },
+            { name: "시나모롤 마스코트 B", img: "https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=300" },
+            { name: "달콤 딸기 케이크 키링", img: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=300" }
+        ];
+        const capsuleColors = ["#ff94b8", "#ffb7b2", "#ffdfba", "#a0e7e5", "#b4f8c8", "#d8b4fe"];
+        let inventory = [];
+        let pullLogs = loadPullLogs();
+        let isSpinning = false;
+
+        function loadPullLogs() {
+            try {
+                const raw = localStorage.getItem(LOG_STORAGE_KEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function savePullLogs() {
+            try {
+                localStorage.setItem(LOG_STORAGE_KEY, JSON.stringify(pullLogs));
+            } catch (e) {}
+            updateLogBadge();
+        }
+
+        function formatTimestamp(date) {
+            const d = date || new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}시 ${pad(d.getMinutes())}분 ${pad(d.getSeconds())}초`;
+        }
+
+        function recordPullLog(rewardName) {
+            pullLogs.unshift({
+                time: formatTimestamp(new Date()),
+                name: rewardName || "이름 없는 상품"
+            });
+            savePullLogs();
+        }
+
+        function updateLogBadge() {
+            const el = document.getElementById('logCountBadge');
+            if (el) el.innerText = pullLogs.length;
+        }
+
+        function renderPullLogs() {
+            updateLogBadge();
+            const listEl = document.getElementById('adminLogList');
+            if (!pullLogs.length) {
+                listEl.innerHTML = '<p style="color:#888; font-size:12px; text-align:center; padding:24px 0;">아직 뽑기 기록이 없습니다.</p>';
+                return;
+            }
+            listEl.innerHTML = pullLogs.map((entry, i) => `
+                <div class="log-row">
+                    <span class="log-time">#${pullLogs.length - i} · ${entry.time}</span>
+                    <span class="log-item">${entry.name}</span>
+                </div>
+            `).join('');
+        }
+
+        function clearPullLogs() {
+            if (!pullLogs.length) return;
+            if (confirm("저장된 뽑기 기록을 모두 지울까요?")) {
+                pullLogs = [];
+                savePullLogs();
+                renderPullLogs();
+            }
+        }
+
+        function switchAdminTab(tab) {
+            const isSettings = tab === 'settings';
+            document.getElementById('tabBtnSettings').classList.toggle('active', isSettings);
+            document.getElementById('tabBtnLogs').classList.toggle('active', !isSettings);
+            document.getElementById('adminTabSettings').style.display = isSettings ? 'block' : 'none';
+            document.getElementById('adminTabLogs').style.display = isSettings ? 'none' : 'block';
+            if (!isSettings) renderPullLogs();
+        }
+
+        function updateCoinDisplay() {
+            document.getElementById('coinDisplay').innerText = `COIN: ${coinCount}`;
+        }
+
+        function addCoin() {
+            coinCount++;
+            updateCoinDisplay();
+            playCoinSound();
+        }
+
+        function pullGacha() {
+            if (isSpinning) return;
+            if (coinCount <= 0) {
+                alert("코인이 부족해요! 우측 상단 [🪙 코인 충전] 버튼을 눌러주세요!");
+                return;
+            }
+            if (rewards.length === 0) {
+                alert("등록된 상품이 없습니다. 관리자 모드에서 상품을 추가해주세요!");
+                return;
+            }
+
+            coinCount--;
+            updateCoinDisplay();
+            isSpinning = true;
+
+            const leverHandle = document.getElementById('leverHandle');
+            let currentRotation = 0;
+            let step = 0;
+            const totalSteps = 8;
+
+            const spinInterval = setInterval(() => {
+                currentRotation += 45;
+                leverHandle.style.transform = `rotate(${currentRotation}deg)`;
+                playRatchetClickSound(1 + (step % 2) * 0.15);
+                step++;
+
+                if (step >= totalSteps) {
+                    clearInterval(spinInterval);
+                    setTimeout(() => {
+                        isSpinning = false;
+                        dropCapsuleToDispenser();
+                    }, 150);
+                }
+            }, 85);
+        }
+
+        function dropCapsuleToDispenser() {
+            const dispenser = document.getElementById('dispenser');
+            dispenser.innerHTML = '';
+            playDropSound();
+
+            const randomReward = rewards[Math.floor(Math.random() * rewards.length)];
+            const randomColor = capsuleColors[Math.floor(Math.random() * capsuleColors.length)];
+
+            const capsule = document.createElement('div');
+            capsule.className = 'capsule';
+            capsule.style.background = randomColor;
+            capsule.title = "클릭해서 캡슐 열기!";
+
+            capsule.onclick = function(e) {
+                e.stopPropagation();
+                openCapsuleResult(randomReward, randomColor);
+                dispenser.innerHTML = '<span style="color: #a0aec0; font-size: 11px; font-weight: bold;">DISPENSER</span>';
+                inventory.push(randomReward);
+                recordPullLog(randomReward.name);
+                document.getElementById('inven-count').innerText = inventory.length;
+            };
+
+            dispenser.appendChild(capsule);
+        }
+
+        function openCapsuleResult(reward, capsuleColor) {
+            playOpenCapsuleSound();
+            const stage = document.getElementById('capsuleStage');
+            const capTop = document.getElementById('capTop');
+
+            stage.classList.remove('opened');
+            capTop.style.background = capsuleColor;
+            document.getElementById('resultName').innerText = reward.name;
+            document.getElementById('resultImage').src = reward.img || 'https://via.placeholder.com/150';
+
+            document.getElementById('resultModal').style.display = 'flex';
+
+            setTimeout(() => {
+                stage.classList.add('opened');
+            }, 150);
+        }
+
+        function closeResultModal() {
+            document.getElementById('resultModal').style.display = 'none';
+        }
+
+        function openInventory() {
+            const listEl = document.getElementById('inventoryList');
+            if (inventory.length === 0) {
+                listEl.innerHTML = '<p style="color: #888; font-size: 13px; margin: 20px 0;">아직 뽑은 상품이 없어요!</p>';
+            } else {
+                listEl.innerHTML = '';
+                inventory.forEach((item) => {
+                    const card = document.createElement('div');
+                    card.className = 'inven-item-card';
+                    card.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="${item.img || 'https://via.placeholder.com/150'}" style="width: 44px; height: 44px; object-fit: contain; border-radius: 8px; background: white;">
+                            <span style="font-size: 13px; font-weight: bold; color: #444;">${item.name}</span>
+                        </div>
+                        <span style="font-size: 11px; color: #ff69b4; font-weight: bold;">🔍 크게 보기</span>
+                    `;
+                    card.onclick = () => openZoomModal(item);
+                    listEl.appendChild(card);
+                });
+            }
+            document.getElementById('invenModal').style.display = 'flex';
+        }
+
+        function closeInventory() {
+            document.getElementById('invenModal').style.display = 'none';
+        }
+
+        function openZoomModal(item) {
+            document.getElementById('zoomTitle').innerText = item.name;
+            document.getElementById('zoomImage').src = item.img || 'https://via.placeholder.com/250';
+            document.getElementById('zoomModal').style.display = 'flex';
+        }
+
+        function closeZoomModal() {
+            document.getElementById('zoomModal').style.display = 'none';
+        }
+
+        function requestAdminAuth() {
+            document.getElementById('adminPwInput').value = '';
+            document.getElementById('authModal').style.display = 'flex';
+            setTimeout(() => document.getElementById('adminPwInput').focus(), 100);
+        }
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+        function verifyAdminPw() {
+            const inputPw = document.getElementById('adminPwInput').value;
+            if (inputPw === adminPassword) {
+                closeAuthModal();
+                openAdmin();
+            } else {
+                alert("비밀번호가 일치하지 않습니다!");
+                document.getElementById('adminPwInput').value = '';
+            }
+        }
+
+        function openAdmin() {
+            document.getElementById('adminNewPwInput').value = adminPassword;
+            document.getElementById('adminPosterInput').value = posterUrl;
+            renderAdminRewards();
+            renderPullLogs();
+            switchAdminTab('settings');
+            document.getElementById('adminModal').style.display = 'flex';
+        }
+        function closeAdmin() {
+            document.getElementById('adminModal').style.display = 'none';
+        }
+
+        function renderAdminRewards() {
+            const container = document.getElementById('adminRewardList');
+            container.innerHTML = '';
+            rewards.forEach((r, idx) => {
+                container.innerHTML += `
+                    <div class="admin-item-row">
+                        <input type="text" placeholder="상품 이름" value="${r.name}" id="adminName_${idx}" style="flex:1;">
+                        <input type="text" placeholder="결과 PNG 주소(URL)" value="${r.img}" id="adminImg_${idx}" style="flex:1.5;">
+                        <button onclick="removeRewardRow(${idx})" style="background:#ff6b81; color:white; border:none; padding:6px 9px; border-radius:6px; cursor:pointer; font-weight:bold;">X</button>
+                    </div>
+                `;
+            });
+        }
+
+        function addRewardRow() {
+            rewards.push({ name: "새로운 상품", img: "" });
+            renderAdminRewards();
+        }
+
+        function removeRewardRow(idx) {
+            rewards.splice(idx, 1);
+            renderAdminRewards();
+        }
+
+        function saveAdminSettings() {
+            const newPw = document.getElementById('adminNewPwInput').value.trim();
+            if (newPw !== "") {
+                adminPassword = newPw;
+            }
+            posterUrl = document.getElementById('adminPosterInput').value;
+
+            let newRewards = [];
+            rewards.forEach((_, idx) => {
+                const nameEl = document.getElementById(`adminName_${idx}`);
+                const imgEl = document.getElementById(`adminImg_${idx}`);
+                if (nameEl && imgEl) {
+                    newRewards.push({ name: nameEl.value, img: imgEl.value });
+                }
+            });
+            rewards = newRewards;
+
+            const topArea = document.getElementById('topDisplayArea');
+            if (posterUrl.trim() !== "") {
+                topArea.innerHTML = `<img src="${posterUrl}" alt="상단 포스터">`;
+            } else {
+                topArea.innerHTML = `<div class="top-display-placeholder">🎀 [관리자 모드] 🎀<br>여기를 눌러 상단 포스터 이미지를 설정하세요!</div>`;
+            }
+
+            closeAdmin();
+            alert("설정이 안전하게 저장되었습니다!");
+        }
+
+        updateLogBadge();
+    </script>
+</body>
+</html>
