@@ -6,7 +6,7 @@
   <title>파스텔 가챠 머신</title>
 
   <!-- =================================================================
-       [1] 카카오톡 공유 미리보기 설정 (여기 3줄만 원하는 내용으로 바꾸세요)
+       [1] 카카오톡 공유 미리보기 설정 (원하는 내용으로 수정하세요)
        ================================================================= -->
   <meta property="og:title" content="두근두근 파스텔 가챠 뽑기!" />
   <meta property="og:description" content="동전을 넣고 손잡이를 돌려 오늘의 행운 캡슐을 뽑아보세요!" />
@@ -25,164 +25,159 @@
 
     body {
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(180deg, #fff5f9 0%, #f3f0ff 50%, #eef7ff 100%);
+      background: linear-gradient(160deg, #fff3f8 0%, #f3efff 55%, #eaf6ff 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 20px 14px;
-      color: #5c4b5b;
+      padding: 24px 14px 40px;
+      color: #5a4659;
     }
 
-    /* 전체 머신 프레임 */
-    .machine-wrapper {
+    .app-container {
       width: 100%;
-      max-width: 420px;
+      max-width: 430px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* 가챠 머신 본체 */
+    .gacha-machine {
       background: #ffffff;
       border-radius: 36px;
       padding: 18px;
-      box-shadow:
-        0 18px 40px rgba(214, 168, 200, 0.28),
-        inset 0 0 0 4px #ffd8e8;
+      border: 4px solid #ffd5e7;
+      box-shadow: 0 16px 36px rgba(205, 160, 195, 0.25);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
-    /* 상단 포스터 영역 */
-    .poster-box {
+    /* 상단 포스터 */
+    .poster-frame {
       width: 100%;
       aspect-ratio: 16 / 7;
-      background: linear-gradient(135deg, #ffe2ee, #e8e4ff);
       border-radius: 22px;
       overflow: hidden;
-      border: 3px solid #ffc6de;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
+      border: 3px solid #ffc4de;
+      background: linear-gradient(135deg, #ffe3ef, #e8e3ff);
     }
 
-    .poster-box img {
+    .poster-frame img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    /* 중앙 투명 돔(캡슐 통) */
-    .dome-area {
+    /* 캡슐 돔 */
+    .dome {
       position: relative;
       width: 100%;
-      height: 230px;
-      background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.95), rgba(235, 245, 255, 0.75) 65%, rgba(224, 218, 255, 0.85));
-      border-radius: 32px;
-      border: 4px solid #d9d2ff;
+      height: 220px;
+      border-radius: 30px;
+      background: radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.95), rgba(236, 246, 255, 0.78) 68%, rgba(224, 217, 255, 0.85));
+      border: 4px solid #d7cfff;
       overflow: hidden;
-      box-shadow: inset 0 -14px 24px rgba(185, 174, 245, 0.25);
+      box-shadow: inset 0 -12px 22px rgba(180, 168, 240, 0.22);
     }
 
-    .dome-highlight {
+    .dome-shine {
       position: absolute;
       top: 14px;
       left: 20px;
-      width: 75px;
-      height: 24px;
+      width: 72px;
+      height: 22px;
       background: rgba(255, 255, 255, 0.75);
       border-radius: 50%;
-      transform: rotate(-18deg);
+      transform: rotate(-16deg);
       pointer-events: none;
-      z-index: 3;
+      z-index: 2;
     }
 
-    .capsule-pool {
+    .dome-capsules {
       position: relative;
       width: 100%;
       height: 100%;
     }
 
-    .deco-capsule {
+    .mini-capsule {
       position: absolute;
-      width: 46px;
-      height: 46px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
-      border: 2.5px solid rgba(255, 255, 255, 0.9);
-      box-shadow: 0 4px 10px rgba(140, 120, 160, 0.18);
-      transition: transform 0.35s ease;
+      border: 2.5px solid rgba(255, 255, 255, 0.92);
+      box-shadow: 0 4px 8px rgba(135, 115, 155, 0.16);
     }
 
-    .deco-capsule::after {
+    .mini-capsule::after {
       content: '';
       position: absolute;
       top: 50%;
       left: 0;
       width: 100%;
       height: 2.5px;
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.9);
       transform: translateY(-50%);
     }
 
-    .dome-area.shaking .deco-capsule {
-      animation: capsuleMix 0.45s ease-in-out infinite alternate;
+    .dome.shaking .mini-capsule {
+      animation: shakeCapsules 0.35s ease-in-out infinite alternate;
     }
 
-    @keyframes capsuleMix {
+    @keyframes shakeCapsules {
       0% { transform: translate(0, 0) rotate(0deg); }
-      50% { transform: translate(-6px, -14px) rotate(-25deg); }
-      100% { transform: translate(6px, -8px) rotate(25deg); }
+      50% { transform: translate(-5px, -12px) rotate(-22deg); }
+      100% { transform: translate(5px, -7px) rotate(22deg); }
     }
 
-    /* 상태 안내 배너 */
-    .status-bar {
+    /* 상태 메시지 */
+    .guide-text {
       background: #fff4f8;
-      border: 2px dashed #ffb8d4;
+      border: 2px dashed #ffb7d3;
       border-radius: 16px;
       padding: 10px 12px;
       text-align: center;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
-      color: #a45779;
+      color: #9e5274;
     }
 
-    /* =================================================================
-       하단 조작부: 코인투입구 / 가챠 손잡이 / 캡슐 배출구 (겹침 방지 3단 구조)
-       ================================================================= */
-    .control-panel {
+    /* 하단 조작부: 코인투입구 | 손잡이 | 배출구 (겹침 없이 배치) */
+    .bottom-deck {
       background: linear-gradient(180deg, #ffeaf2 0%, #ffd8e8 100%);
       border-radius: 26px;
-      padding: 18px 14px;
-      border: 3px solid #ffc0da;
+      padding: 16px 12px;
+      border: 3px solid #ffbdd9;
       display: grid;
       grid-template-columns: 92px 1fr 104px;
       align-items: center;
       gap: 10px;
     }
 
-    .panel-col {
+    .deck-slot {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
+      gap: 7px;
     }
 
-    .panel-label {
+    .deck-tag {
       font-size: 11px;
       font-weight: 800;
-      color: #8c536d;
-      background: rgba(255, 255, 255, 0.8);
+      color: #8b516c;
+      background: rgba(255, 255, 255, 0.85);
       padding: 3px 8px;
       border-radius: 999px;
       white-space: nowrap;
     }
 
-    /* 1) 왼쪽: 코인 투입구 */
-    .coin-slot-btn {
+    .coin-btn {
       width: 78px;
-      height: 104px;
+      height: 102px;
       background: #ffffff;
-      border: 3px solid #f5a9c8;
+      border: 3px solid #f4a6c6;
       border-radius: 18px;
       display: flex;
       flex-direction: column;
@@ -190,76 +185,67 @@
       justify-content: center;
       gap: 8px;
       cursor: pointer;
-      box-shadow: 0 5px 0 #ee96ba;
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      box-shadow: 0 5px 0 #ed93b8;
     }
 
-    .coin-slot-btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 1px 0 #ee96ba;
+    .coin-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #ed93b8;
     }
 
-    .coin-hole {
-      width: 12px;
-      height: 44px;
-      background: #593a49;
+    .coin-slot {
+      width: 11px;
+      height: 42px;
+      background: #583948;
       border-radius: 999px;
-      border: 2px solid #d889ab;
-      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45);
+      border: 2px solid #d685a7;
     }
 
-    .coin-text {
+    .coin-label {
       font-size: 12px;
       font-weight: 800;
-      color: #b4557e;
+      color: #b1527b;
     }
 
-    /* 2) 가운데: 큼직한 가챠 손잡이(다이얼) */
-    .crank-btn {
-      width: 124px;
-      height: 124px;
+    .dial-btn {
+      width: 122px;
+      height: 122px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #ffffff, #ffe3ef);
-      border: 5px solid #ff9ec6;
-      box-shadow:
-        0 7px 0 #eb84b0,
-        0 10px 18px rgba(190, 95, 138, 0.25);
+      background: radial-gradient(circle at 35% 30%, #ffffff, #ffe2ee);
+      border: 5px solid #ff9bc4;
+      box-shadow: 0 7px 0 #ea81ae, 0 10px 16px rgba(185, 90, 134, 0.22);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      position: relative;
-      transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .crank-btn.turning {
+    .dial-btn.spinning {
       transform: rotate(360deg);
     }
 
-    .crank-bar {
-      width: 96px;
+    .dial-handle {
+      width: 94px;
       height: 28px;
-      background: linear-gradient(180deg, #ff85b7, #f466a1);
+      background: linear-gradient(180deg, #ff84b6, #f2639f);
       border-radius: 999px;
       border: 3px solid #ffffff;
-      box-shadow: 0 3px 8px rgba(185, 68, 118, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
       color: #ffffff;
       font-size: 12px;
       font-weight: 800;
-      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* 3) 오른쪽: 큼직한 캡슐 배출구 */
-    .exit-box {
+    .chute-box {
       width: 94px;
-      height: 104px;
-      background: #6c4d65;
+      height: 102px;
+      background: #6a4b63;
       border-radius: 20px;
-      border: 4px solid #f5a9c8;
-      box-shadow: inset 0 10px 18px rgba(32, 18, 30, 0.55);
+      border: 4px solid #f4a6c6;
+      box-shadow: inset 0 10px 16px rgba(30, 16, 28, 0.52);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -268,99 +254,157 @@
       cursor: pointer;
     }
 
-    .exit-flap {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 24px;
-      background: rgba(255, 214, 232, 0.3);
-      border-bottom: 2px solid rgba(255, 255, 255, 0.25);
-      pointer-events: none;
-    }
-
-    .dropped-capsule {
-      width: 62px;
-      height: 62px;
+    .chute-capsule {
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       border: 3px solid #ffffff;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
       display: none;
       position: relative;
-      animation: dropBounce 0.5s cubic-bezier(0.28, 1.45, 0.5, 1) forwards;
+      animation: capsuleDrop 0.45s cubic-bezier(0.28, 1.45, 0.5, 1) forwards;
     }
 
-    .dropped-capsule::after {
+    .chute-capsule::after {
       content: '';
       position: absolute;
       top: 50%;
       left: 0;
       width: 100%;
       height: 3px;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.92);
       transform: translateY(-50%);
     }
 
-    .dropped-capsule.show {
+    .chute-capsule.visible {
       display: block;
     }
 
-    @keyframes dropBounce {
-      0% { transform: translateY(-70px) scale(0.7); opacity: 0; }
-      70% { transform: translateY(6px) scale(1.05); opacity: 1; }
+    @keyframes capsuleDrop {
+      0% { transform: translateY(-65px) scale(0.75); opacity: 0; }
+      75% { transform: translateY(5px) scale(1.04); opacity: 1; }
       100% { transform: translateY(0) scale(1); opacity: 1; }
     }
 
-    /* 결과 확인 팝업 모달 */
-    .modal-backdrop {
+    /* 내 보관함 영역 */
+    .inventory-section {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 18px;
+      border: 3px solid #e3dcff;
+      box-shadow: 0 10px 24px rgba(175, 160, 215, 0.16);
+    }
+
+    .inventory-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .inventory-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #5b476e;
+    }
+
+    .inventory-count {
+      font-size: 12px;
+      font-weight: 800;
+      color: #7d5fd3;
+      background: #f2eeff;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .inventory-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 22px 10px;
+      font-size: 13px;
+      color: #9687a6;
+      background: #faf8ff;
+      border-radius: 16px;
+    }
+
+    .inv-item {
+      background: #faf8ff;
+      border: 2px solid #ebe4ff;
+      border-radius: 16px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .inv-item img {
+      width: 68px;
+      height: 68px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .inv-item span {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #5a4659;
+      text-align: center;
+      line-height: 1.25;
+      word-break: keep-all;
+    }
+
+    /* 결과 팝업 모달 */
+    .modal-bg {
       position: fixed;
       inset: 0;
-      background: rgba(65, 45, 65, 0.55);
-      backdrop-filter: blur(4px);
+      background: rgba(62, 42, 62, 0.55);
+      backdrop-filter: blur(3px);
       display: none;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      z-index: 100;
+      z-index: 200;
     }
 
-    .modal-backdrop.open {
+    .modal-bg.open {
       display: flex;
     }
 
-    .result-card {
+    .modal-box {
       width: 100%;
       max-width: 340px;
       background: #ffffff;
-      border-radius: 30px;
-      padding: 24px 20px;
+      border-radius: 28px;
+      padding: 22px 20px;
       text-align: center;
-      border: 4px solid #ffc8df;
-      box-shadow: 0 20px 45px rgba(80, 45, 75, 0.3);
-      animation: popIn 0.3s ease;
+      border: 4px solid #ffc7de;
+      box-shadow: 0 18px 40px rgba(75, 42, 70, 0.28);
     }
 
-    @keyframes popIn {
-      from { transform: scale(0.85); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .result-badge {
+    .modal-badge {
       display: inline-block;
       background: #fff0f6;
-      color: #d64b86;
+      color: #d44984;
       font-size: 12px;
       font-weight: 800;
-      padding: 5px 12px;
+      padding: 4px 12px;
       border-radius: 999px;
       margin-bottom: 12px;
     }
 
-    .result-img-wrap {
+    .modal-img-box {
       width: 190px;
       height: 190px;
       margin: 0 auto 14px;
-      border-radius: 22px;
+      border-radius: 20px;
       background: #faf7ff;
       border: 2px solid #ece4ff;
       display: flex;
@@ -369,26 +413,27 @@
       overflow: hidden;
     }
 
-    .result-img-wrap img {
+    .modal-img-box img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
+      display: block;
     }
 
-    .result-name {
-      font-size: 20px;
+    .modal-reward-name {
+      font-size: 19px;
       font-weight: 800;
-      color: #4f394e;
-      margin-bottom: 18px;
+      color: #4d374c;
+      margin-bottom: 16px;
       word-break: keep-all;
     }
 
-    .close-btn {
+    .modal-close {
       width: 100%;
-      padding: 13px;
+      padding: 12px;
       border: none;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #ff8ab9, #b89cff);
+      border-radius: 15px;
+      background: linear-gradient(135deg, #ff89b8, #b69aff);
       color: #ffffff;
       font-size: 15px;
       font-weight: 800;
@@ -398,72 +443,78 @@
 </head>
 <body>
 
-  <div class="machine-wrapper">
-    <!-- 상단 포스터 영역 -->
-    <div class="poster-box">
-      <img id="posterImg" src="" alt="가챠 상단 포스터" />
-    </div>
-
-    <!-- 중앙 캡슐 돔 -->
-    <div class="dome-area" id="domeArea">
-      <div class="dome-highlight"></div>
-      <div class="capsule-pool" id="capsulePool"></div>
-    </div>
-
-    <!-- 안내 메시지 -->
-    <div class="status-bar" id="statusBar">왼쪽 코인 투입구를 눌러 코인을 넣어주세요!</div>
-
-    <!-- 하단 3단 조작부 (코인투입구 | 손잡이 | 배출구) -->
-    <div class="control-panel">
-      <!-- 1. 코인 투입구 -->
-      <div class="panel-col">
-        <span class="panel-label">1. 코인 투입</span>
-        <button type="button" class="coin-slot-btn" id="coinBtn" aria-label="코인 넣기">
-          <div class="coin-hole"></div>
-          <span class="coin-text" id="coinCountText">0 코인</span>
-        </button>
+  <div class="app-container">
+    <!-- 가챠 기계 -->
+    <div class="gacha-machine">
+      <div class="poster-frame">
+        <img id="posterImg" src="" alt="가챠 포스터" />
       </div>
 
-      <!-- 2. 가챠 손잡이 -->
-      <div class="panel-col">
-        <span class="panel-label">2. 손잡이 돌리기</span>
-        <button type="button" class="crank-btn" id="crankBtn" aria-label="손잡이 돌리기">
-          <div class="crank-bar">TURN</div>
-        </button>
+      <div class="dome" id="dome">
+        <div class="dome-shine"></div>
+        <div class="dome-capsules" id="domeCapsules"></div>
       </div>
 
-      <!-- 3. 캡슐 배출구 -->
-      <div class="panel-col">
-        <span class="panel-label">3. 캡슐 열기</span>
-        <div class="exit-box" id="exitBox" role="button" tabindex="0" aria-label="나온 캡슐 열기">
-          <div class="exit-flap"></div>
-          <div class="dropped-capsule" id="droppedCapsule"></div>
+      <div class="guide-text" id="guideText">왼쪽 코인 투입구를 눌러 코인을 넣어주세요!</div>
+
+      <div class="bottom-deck">
+        <div class="deck-slot">
+          <span class="deck-tag">1. 코인 투입</span>
+          <button type="button" class="coin-btn" id="coinBtn">
+            <div class="coin-slot"></div>
+            <span class="coin-label" id="coinLabel">0 코인</span>
+          </button>
+        </div>
+
+        <div class="deck-slot">
+          <span class="deck-tag">2. 손잡이 돌리기</span>
+          <button type="button" class="dial-btn" id="dialBtn" aria-label="손잡이 돌리기">
+            <div class="dial-handle">TURN</div>
+          </button>
+        </div>
+
+        <div class="deck-slot">
+          <span class="deck-tag">3. 캡슐 열기</span>
+          <div class="chute-box" id="chuteBox" role="button" tabindex="0" aria-label="배출구 캡슐 열기">
+            <div class="chute-capsule" id="chuteCapsule"></div>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- 친구/사용자 본인이 뽑은 상품 보관함 -->
+    <section class="inventory-section">
+      <div class="inventory-header">
+        <h2 class="inventory-title">🎒 내 보관함</h2>
+        <span class="inventory-count" id="inventoryCount">0개</span>
+      </div>
+      <div class="inventory-grid" id="inventoryGrid">
+        <div class="inventory-empty">아직 뽑은 캡슐이 없어요. 가챠를 돌려보세요!</div>
+      </div>
+    </section>
   </div>
 
   <!-- 결과 확인 팝업 -->
-  <div class="modal-backdrop" id="resultModal">
-    <div class="result-card">
-      <span class="result-badge">🎉 축하합니다!</span>
-      <div class="result-img-wrap">
-        <img id="resultImg" src="" alt="뽑힌 상품 이미지" />
+  <div class="modal-bg" id="modalBg">
+    <div class="modal-box">
+      <span class="modal-badge">✨ 획득 완료!</span>
+      <div class="modal-img-box">
+        <img id="modalImg" src="" alt="상품 이미지" />
       </div>
-      <div class="result-name" id="resultName">상품 이름</div>
-      <button type="button" class="close-btn" id="closeModalBtn">확인</button>
+      <div class="modal-reward-name" id="modalRewardName">상품명</div>
+      <button type="button" class="modal-close" id="modalClose">확인</button>
     </div>
   </div>
 
   <script>
     /* =================================================================
-       [2] 상단 포스터 & 가챠 상품 설정 (여기만 수정해서 저장하면 친구에게도 적용됩니다!)
+       [2] 상단 포스터 & 가챠 상품 설정 (여기서 수정하면 공유 시에도 적용됩니다)
        ================================================================= */
 
-    // 상단 포스터 이미지 주소 (원하는 이미지 직링크를 따옴표 안에 넣으세요)
-    const POSTER_IMAGE_URL = "https://placehold.co/800x350/ffd6e7/7a4b63?text=MY+PASTEL+GACHA";
+    // 상단 포스터 이미지 주소
+    const POSTER_URL = "https://placehold.co/800x350/ffd6e7/7a4b63?text=MY+PASTEL+GACHA";
 
-    // 가챠 상품 목록 (원하는 만큼 줄을 추가하거나 수정하세요)
+    // 가챠 상품 목록 (name: 상품명, img: 결과 이미지 주소)
     const REWARDS = [
       {
         name: "딸기 우유 키링",
@@ -484,9 +535,9 @@
     ];
 
     /* =================================================================
-       [3] 이하 동작 로직 (수정하지 않으셔도 됩니다)
+       [3] 가챠 동작 & 도르륵 소리 & 보관함 로직
        ================================================================= */
-    const PASTEL_COLORS = [
+    const CAPSULE_COLORS = [
       "linear-gradient(180deg, #ff9ec6 50%, #ffffff 50%)",
       "linear-gradient(180deg, #b8a6ff 50%, #ffffff 50%)",
       "linear-gradient(180deg, #8fd8ff 50%, #ffffff 50%)",
@@ -496,176 +547,216 @@
 
     let coins = 0;
     let isSpinning = false;
-    let pendingReward = null;
+    let pendingItem = null;
+    let collectedItems = [];
 
     const posterImg = document.getElementById("posterImg");
-    const domeArea = document.getElementById("domeArea");
-    const capsulePool = document.getElementById("capsulePool");
-    const statusBar = document.getElementById("statusBar");
+    const dome = document.getElementById("dome");
+    const domeCapsules = document.getElementById("domeCapsules");
+    const guideText = document.getElementById("guideText");
     const coinBtn = document.getElementById("coinBtn");
-    const coinCountText = document.getElementById("coinCountText");
-    const crankBtn = document.getElementById("crankBtn");
-    const exitBox = document.getElementById("exitBox");
-    const droppedCapsule = document.getElementById("droppedCapsule");
-    const resultModal = document.getElementById("resultModal");
-    const resultImg = document.getElementById("resultImg");
-    const resultName = document.getElementById("resultName");
-    const closeModalBtn = document.getElementById("closeModalBtn");
+    const coinLabel = document.getElementById("coinLabel");
+    const dialBtn = document.getElementById("dialBtn");
+    const chuteBox = document.getElementById("chuteBox");
+    const chuteCapsule = document.getElementById("chuteCapsule");
+    const inventoryCount = document.getElementById("inventoryCount");
+    const inventoryGrid = document.getElementById("inventoryGrid");
+    const modalBg = document.getElementById("modalBg");
+    const modalImg = document.getElementById("modalImg");
+    const modalRewardName = document.getElementById("modalRewardName");
+    const modalClose = document.getElementById("modalClose");
 
-    // 상단 포스터 적용
-    posterImg.src = POSTER_IMAGE_URL;
+    posterImg.src = POSTER_URL;
 
-    // 돔 안에 파스텔 캡슐 채우기
-    function renderDomeCapsules() {
-      capsulePool.innerHTML = "";
-      const positions = [
+    function initDomeCapsules() {
+      domeCapsules.innerHTML = "";
+      const coords = [
         { left: "8%", bottom: "10px", rot: -15 },
-        { left: "22%", bottom: "14px", rot: 20 },
-        { left: "37%", bottom: "8px", rot: -8 },
-        { left: "52%", bottom: "15px", rot: 32 },
-        { left: "67%", bottom: "10px", rot: -24 },
+        { left: "22%", bottom: "14px", rot: 18 },
+        { left: "37%", bottom: "8px", rot: -10 },
+        { left: "52%", bottom: "15px", rot: 28 },
+        { left: "67%", bottom: "10px", rot: -22 },
         { left: "81%", bottom: "14px", rot: 12 },
-        { left: "14%", bottom: "48px", rot: 28 },
-        { left: "30%", bottom: "52px", rot: -18 },
-        { left: "46%", bottom: "46px", rot: 14 },
-        { left: "61%", bottom: "50px", rot: -28 },
-        { left: "75%", bottom: "46px", rot: 22 },
-        { left: "23%", bottom: "84px", rot: -12 },
-        { left: "41%", bottom: "86px", rot: 25 },
-        { left: "58%", bottom: "82px", rot: -20 }
+        { left: "15%", bottom: "48px", rot: 24 },
+        { left: "31%", bottom: "52px", rot: -16 },
+        { left: "47%", bottom: "46px", rot: 14 },
+        { left: "62%", bottom: "50px", rot: -25 },
+        { left: "76%", bottom: "46px", rot: 20 },
+        { left: "24%", bottom: "84px", rot: -12 },
+        { left: "42%", bottom: "86px", rot: 22 },
+        { left: "58%", bottom: "82px", rot: -18 }
       ];
 
-      positions.forEach((pos, idx) => {
-        const cap = document.createElement("div");
-        cap.className = "deco-capsule";
-        cap.style.left = pos.left;
-        cap.style.bottom = pos.bottom;
-        cap.style.transform = `rotate(${pos.rot}deg)`;
-        cap.style.background = PASTEL_COLORS[idx % PASTEL_COLORS.length];
-        capsulePool.appendChild(cap);
+      coords.forEach((c, i) => {
+        const el = document.createElement("div");
+        el.className = "mini-capsule";
+        el.style.left = c.left;
+        el.style.bottom = c.bottom;
+        el.style.transform = `rotate(${c.rot}deg)`;
+        el.style.background = CAPSULE_COLORS[i % CAPSULE_COLORS.length];
+        domeCapsules.appendChild(el);
       });
     }
 
-    // 효과음 (Web Audio API)
-    function playTone(type) {
+    // 효과음 (코인 소리 / 도르륵 크랭크 소리 / 캡슐 팝 소리)
+    function playSound(kind) {
       try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
 
-        if (type === "coin") {
+        if (kind === "coin") {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
           osc.type = "sine";
-          osc.frequency.setValueAtTime(987, ctx.currentTime);
-          osc.frequency.setValueAtTime(1318, ctx.currentTime + 0.08);
-          gain.gain.setValueAtTime(0.12, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
-          osc.start();
-          osc.stop(ctx.currentTime + 0.25);
-        } else if (type === "crank") {
-          osc.type = "triangle";
-          osc.frequency.setValueAtTime(260, ctx.currentTime);
-          osc.frequency.linearRampToValueAtTime(420, ctx.currentTime + 0.35);
-          gain.gain.setValueAtTime(0.12, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-          osc.start();
-          osc.stop(ctx.currentTime + 0.4);
-        } else if (type === "pop") {
+          osc.frequency.setValueAtTime(987.77, now);
+          osc.frequency.setValueAtTime(1318.51, now + 0.08);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        } else if (kind === "rattle") {
+          // 도르륵 연속 클릭/라쳇 소리
+          const clicks = 9;
+          for (let i = 0; i < clicks; i++) {
+            const t = now + i * 0.075;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(240 + i * 28, t);
+            osc.frequency.exponentialRampToValueAtTime(140, t + 0.045);
+            gain.gain.setValueAtTime(0.13, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+            osc.start(t);
+            osc.stop(t + 0.055);
+          }
+        } else if (kind === "pop") {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
           osc.type = "sine";
-          osc.frequency.setValueAtTime(523, ctx.currentTime);
-          osc.frequency.setValueAtTime(659, ctx.currentTime + 0.09);
-          osc.frequency.setValueAtTime(784, ctx.currentTime + 0.18);
-          gain.gain.setValueAtTime(0.14, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.38);
-          osc.start();
-          osc.stop(ctx.currentTime + 0.38);
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.08);
+          osc.frequency.setValueAtTime(783.99, now + 0.16);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.36);
         }
-      } catch (e) {}
+      } catch (err) {}
     }
 
-    // 1. 코인 넣기
+    function renderInventory() {
+      inventoryCount.textContent = `${collectedItems.length}개`;
+      if (collectedItems.length === 0) {
+        inventoryGrid.innerHTML = `<div class="inventory-empty">아직 뽑은 캡슐이 없어요. 가챠를 돌려보세요!</div>`;
+        return;
+      }
+
+      inventoryGrid.innerHTML = "";
+      collectedItems.forEach((item) => {
+        const card = document.createElement("div");
+        card.className = "inv-item";
+        card.innerHTML = `
+          <img src="${item.img}" alt="${item.name}" />
+          <span>${item.name}</span>
+        `;
+        card.addEventListener("click", () => {
+          modalImg.src = item.img;
+          modalRewardName.textContent = item.name;
+          modalBg.classList.add("open");
+        });
+        inventoryGrid.appendChild(card);
+      });
+    }
+
     coinBtn.addEventListener("click", () => {
       if (isSpinning) return;
       coins += 1;
-      coinCountText.textContent = `${coins} 코인`;
-      playTone("coin");
-      if (!pendingReward) {
-        statusBar.textContent = "가운데 손잡이(TURN)를 눌러 돌려주세요!";
+      coinLabel.textContent = `${coins} 코인`;
+      playSound("coin");
+      if (!pendingItem) {
+        guideText.textContent = "가운데 손잡이(TURN)를 눌러 돌려주세요!";
       }
     });
 
-    // 2. 손잡이 돌리기
-    crankBtn.addEventListener("click", () => {
+    dialBtn.addEventListener("click", () => {
       if (isSpinning) return;
 
-      if (pendingReward) {
-        statusBar.textContent = "오른쪽 배출구의 캡슐을 먼저 눌러 열어주세요!";
+      if (pendingItem) {
+        guideText.textContent = "오른쪽 배출구 캡슐을 먼저 눌러 열어주세요!";
         return;
       }
 
       if (coins <= 0) {
-        statusBar.textContent = "코인이 부족해요! 왼쪽 투입구를 먼저 눌러주세요.";
+        guideText.textContent = "코인이 없어요! 왼쪽 투입구를 먼저 눌러주세요.";
         return;
       }
 
       coins -= 1;
-      coinCountText.textContent = `${coins} 코인`;
+      coinLabel.textContent = `${coins} 코인`;
       isSpinning = true;
-      statusBar.textContent = "달그락달그락... 캡슐이 섞이고 있어요!";
-      playTone("crank");
+      guideText.textContent = "도르륵... 캡슐이 섞이고 있어요!";
+      playSound("rattle");
 
-      crankBtn.classList.add("turning");
-      domeArea.classList.add("shaking");
+      dialBtn.classList.add("spinning");
+      dome.classList.add("shaking");
 
       setTimeout(() => {
-        crankBtn.classList.remove("turning");
-        domeArea.classList.remove("shaking");
+        dialBtn.classList.remove("spinning");
+        dome.classList.remove("shaking");
 
-        const randomIndex = Math.floor(Math.random() * REWARDS.length);
-        pendingReward = REWARDS[randomIndex];
+        const picked = REWARDS[Math.floor(Math.random() * REWARDS.length)];
+        pendingItem = { ...picked };
 
-        const randomColor = PASTEL_COLORS[Math.floor(Math.random() * PASTEL_COLORS.length)];
-        droppedCapsule.style.background = randomColor;
-        droppedCapsule.classList.add("show");
+        chuteCapsule.style.background = CAPSULE_COLORS[Math.floor(Math.random() * CAPSULE_COLORS.length)];
+        chuteCapsule.classList.add("visible");
 
         isSpinning = false;
-        statusBar.textContent = "캡슐이 나왔어요! 오른쪽 배출구 캡슐을 눌러보세요!";
+        guideText.textContent = "캡슐이 나왔어요! 오른쪽 배출구 캡슐을 눌러보세요!";
       }, 750);
     });
 
-    // 3. 배출구 캡슐 열기
-    function openDroppedCapsule() {
-      if (!pendingReward || isSpinning) return;
-      playTone("pop");
+    function openChuteCapsule() {
+      if (!pendingItem || isSpinning) return;
+      playSound("pop");
 
-      resultImg.src = pendingReward.img;
-      resultName.textContent = pendingReward.name;
-      resultModal.classList.add("open");
+      modalImg.src = pendingItem.img;
+      modalRewardName.textContent = pendingItem.name;
+      modalBg.classList.add("open");
 
-      droppedCapsule.classList.remove("show");
-      pendingReward = null;
-      statusBar.textContent = coins > 0
+      collectedItems.unshift(pendingItem);
+      renderInventory();
+
+      chuteCapsule.classList.remove("visible");
+      pendingItem = null;
+      guideText.textContent = coins > 0
         ? "손잡이를 한 번 더 돌릴 수 있어요!"
         : "왼쪽 코인 투입구를 눌러 코인을 넣어주세요!";
     }
 
-    exitBox.addEventListener("click", openDroppedCapsule);
-    exitBox.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") openDroppedCapsule();
+    chuteBox.addEventListener("click", openChuteCapsule);
+    chuteBox.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") openChuteCapsule();
     });
 
-    closeModalBtn.addEventListener("click", () => {
-      resultModal.classList.remove("open");
+    modalClose.addEventListener("click", () => {
+      modalBg.classList.remove("open");
     });
 
-    resultModal.addEventListener("click", (e) => {
-      if (e.target === resultModal) {
-        resultModal.classList.remove("open");
+    modalBg.addEventListener("click", (e) => {
+      if (e.target === modalBg) {
+        modalBg.classList.remove("open");
       }
     });
 
-    renderDomeCapsules();
+    initDomeCapsules();
+    renderInventory();
   </script>
 </body>
 </html>
