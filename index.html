@@ -9,7 +9,7 @@
        [1] 카카오톡 공유 미리보기 설정 (원하는 내용으로 수정하세요)
        ================================================================= -->
   <meta property="og:title" content="두근두근 파스텔 가챠 뽑기!" />
-  <meta property="og:description" content="동전을 넣고 손잡이를 돌려 오늘의 행운 캡슐을 뽑아보세요!" />
+  <meta property="og:description" content="코인을 넣고 손잡이를 돌려 오늘의 행운 캡슐을 뽑아보세요!" />
   <meta property="og:image" content="https://placehold.co/800x400/ffd6e7/7a4b63?text=Pastel+Gacha" />
 
   <style>
@@ -25,69 +25,70 @@
 
     body {
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(160deg, #fff3f8 0%, #f3efff 55%, #eaf6ff 100%);
+      background: linear-gradient(180deg, #fff5f9 0%, #f4f0ff 50%, #edf7ff 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 24px 14px 40px;
+      padding: 20px 14px 44px;
       color: #5a4659;
     }
 
-    .app-container {
+    .page-wrap {
       width: 100%;
-      max-width: 430px;
+      max-width: 420px;
       display: flex;
       flex-direction: column;
       gap: 18px;
     }
 
-    /* 가챠 머신 본체 */
-    .gacha-machine {
-      background: #ffffff;
-      border-radius: 36px;
-      padding: 18px;
-      border: 4px solid #ffd5e7;
-      box-shadow: 0 16px 36px rgba(205, 160, 195, 0.25);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    /* 상단 포스터 */
-    .poster-frame {
+    /* 상단 포스터 배너 */
+    .poster-card {
       width: 100%;
       aspect-ratio: 16 / 7;
-      border-radius: 22px;
+      border-radius: 24px;
       overflow: hidden;
-      border: 3px solid #ffc4de;
       background: linear-gradient(135deg, #ffe3ef, #e8e3ff);
+      border: 3px solid #ffc6df;
+      box-shadow: 0 10px 24px rgba(210, 165, 198, 0.2);
     }
 
-    .poster-frame img {
+    .poster-card img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    /* 캡슐 돔 */
-    .dome {
+    /* 가챠 머신 본체 */
+    .machine-body {
+      background: #ffffff;
+      border-radius: 36px;
+      padding: 18px;
+      border: 4px solid #ffd6e8;
+      box-shadow: 0 16px 36px rgba(205, 160, 195, 0.24);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* 1. 상단 캡슐 돔 */
+    .gacha-dome {
       position: relative;
       width: 100%;
-      height: 220px;
-      border-radius: 30px;
-      background: radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.95), rgba(236, 246, 255, 0.78) 68%, rgba(224, 217, 255, 0.85));
+      height: 225px;
+      border-radius: 32px;
+      background: radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.96), rgba(235, 246, 255, 0.78) 68%, rgba(224, 217, 255, 0.86));
       border: 4px solid #d7cfff;
       overflow: hidden;
       box-shadow: inset 0 -12px 22px rgba(180, 168, 240, 0.22);
     }
 
-    .dome-shine {
+    .dome-gloss {
       position: absolute;
       top: 14px;
-      left: 20px;
-      width: 72px;
+      left: 22px;
+      width: 76px;
       height: 22px;
       background: rgba(255, 255, 255, 0.75);
       border-radius: 50%;
@@ -96,13 +97,13 @@
       z-index: 2;
     }
 
-    .dome-capsules {
+    .dome-caps {
       position: relative;
       width: 100%;
       height: 100%;
     }
 
-    .mini-capsule {
+    .cap-ball {
       position: absolute;
       width: 44px;
       height: 44px;
@@ -111,7 +112,7 @@
       box-shadow: 0 4px 8px rgba(135, 115, 155, 0.16);
     }
 
-    .mini-capsule::after {
+    .cap-ball::after {
       content: '';
       position: absolute;
       top: 50%;
@@ -122,18 +123,18 @@
       transform: translateY(-50%);
     }
 
-    .dome.shaking .mini-capsule {
-      animation: shakeCapsules 0.35s ease-in-out infinite alternate;
+    .gacha-dome.shaking .cap-ball {
+      animation: capShake 0.35s ease-in-out infinite alternate;
     }
 
-    @keyframes shakeCapsules {
+    @keyframes capShake {
       0% { transform: translate(0, 0) rotate(0deg); }
       50% { transform: translate(-5px, -12px) rotate(-22deg); }
       100% { transform: translate(5px, -7px) rotate(22deg); }
     }
 
-    /* 상태 메시지 */
-    .guide-text {
+    /* 상태 안내창 */
+    .status-msg {
       background: #fff4f8;
       border: 2px dashed #ffb7d3;
       border-radius: 16px;
@@ -144,72 +145,73 @@
       color: #9e5274;
     }
 
-    /* 하단 조작부: 코인투입구 | 손잡이 | 배출구 (겹침 없이 배치) */
-    .bottom-deck {
-      background: linear-gradient(180deg, #ffeaf2 0%, #ffd8e8 100%);
+    /* 2. 몸통 조작부: 코인투입구 | 큼직한 손잡이 (겹침 없음) */
+    .body-deck {
+      background: linear-gradient(180deg, #ffeaf2 0%, #ffd9e9 100%);
       border-radius: 26px;
-      padding: 16px 12px;
+      padding: 16px 14px;
       border: 3px solid #ffbdd9;
       display: grid;
-      grid-template-columns: 92px 1fr 104px;
+      grid-template-columns: 110px 1fr;
       align-items: center;
-      gap: 10px;
+      gap: 14px;
     }
 
-    .deck-slot {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .deck-tag {
-      font-size: 11px;
-      font-weight: 800;
-      color: #8b516c;
-      background: rgba(255, 255, 255, 0.85);
-      padding: 3px 8px;
-      border-radius: 999px;
-      white-space: nowrap;
-    }
-
-    .coin-btn {
-      width: 78px;
-      height: 102px;
+    .coin-box {
       background: #ffffff;
       border: 3px solid #f4a6c6;
-      border-radius: 18px;
+      border-radius: 20px;
+      padding: 12px 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      cursor: pointer;
-      box-shadow: 0 5px 0 #ed93b8;
+      box-shadow: 0 4px 0 #ed93b8;
     }
 
-    .coin-btn:active {
-      transform: translateY(3px);
-      box-shadow: 0 2px 0 #ed93b8;
-    }
-
-    .coin-slot {
-      width: 11px;
-      height: 42px;
+    .coin-slot-graphic {
+      width: 12px;
+      height: 36px;
       background: #583948;
       border-radius: 999px;
       border: 2px solid #d685a7;
     }
 
-    .coin-label {
-      font-size: 12px;
+    .coin-badge {
+      font-size: 14px;
       font-weight: 800;
       color: #b1527b;
     }
 
-    .dial-btn {
-      width: 122px;
-      height: 122px;
+    .coin-add-btn {
+      width: 100%;
+      padding: 6px 6px;
+      border: none;
+      border-radius: 12px;
+      background: #fff0f6;
+      color: #b84b7a;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      border: 1.5px solid #ffc2dc;
+    }
+
+    .coin-add-btn:active {
+      transform: translateY(2px);
+    }
+
+    .knob-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .knob-btn {
+      width: 124px;
+      height: 124px;
       border-radius: 50%;
       background: radial-gradient(circle at 35% 30%, #ffffff, #ffe2ee);
       border: 5px solid #ff9bc4;
@@ -221,12 +223,12 @@
       transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .dial-btn.spinning {
+    .knob-btn.turning {
       transform: rotate(360deg);
     }
 
-    .dial-handle {
-      width: 94px;
+    .knob-bar {
+      width: 96px;
       height: 28px;
       background: linear-gradient(180deg, #ff84b6, #f2639f);
       border-radius: 999px;
@@ -239,9 +241,46 @@
       justify-content: center;
     }
 
-    .chute-box {
-      width: 94px;
-      height: 102px;
+    .knob-hint {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #8b516c;
+    }
+
+    /* 3. 하단 큼직한 캡슐 배출구 */
+    .dispenser-area {
+      background: #f9f5ff;
+      border: 3px solid #e2d8ff;
+      border-radius: 24px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .dispenser-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .dispenser-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #5b476e;
+    }
+
+    .dispenser-sub {
+      font-size: 12px;
+      color: #88779c;
+      font-weight: 600;
+    }
+
+    .dispenser-hole {
+      width: 118px;
+      height: 86px;
+      flex-shrink: 0;
       background: #6a4b63;
       border-radius: 20px;
       border: 4px solid #f4a6c6;
@@ -249,22 +288,21 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      overflow: hidden;
       cursor: pointer;
+      overflow: hidden;
     }
 
-    .chute-capsule {
-      width: 60px;
-      height: 60px;
+    .out-capsule {
+      width: 58px;
+      height: 58px;
       border-radius: 50%;
       border: 3px solid #ffffff;
       display: none;
       position: relative;
-      animation: capsuleDrop 0.45s cubic-bezier(0.28, 1.45, 0.5, 1) forwards;
+      animation: outDrop 0.45s cubic-bezier(0.28, 1.45, 0.5, 1) forwards;
     }
 
-    .chute-capsule::after {
+    .out-capsule::after {
       content: '';
       position: absolute;
       top: 50%;
@@ -275,18 +313,18 @@
       transform: translateY(-50%);
     }
 
-    .chute-capsule.visible {
+    .out-capsule.show {
       display: block;
     }
 
-    @keyframes capsuleDrop {
-      0% { transform: translateY(-65px) scale(0.75); opacity: 0; }
-      75% { transform: translateY(5px) scale(1.04); opacity: 1; }
+    @keyframes outDrop {
+      0% { transform: translateY(-60px) scale(0.75); opacity: 0; }
+      75% { transform: translateY(4px) scale(1.04); opacity: 1; }
       100% { transform: translateY(0) scale(1); opacity: 1; }
     }
 
-    /* 내 보관함 영역 */
-    .inventory-section {
+    /* 보관함 */
+    .locker-card {
       background: #ffffff;
       border-radius: 28px;
       padding: 18px;
@@ -294,20 +332,20 @@
       box-shadow: 0 10px 24px rgba(175, 160, 215, 0.16);
     }
 
-    .inventory-header {
+    .locker-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 12px;
     }
 
-    .inventory-title {
+    .locker-title {
       font-size: 16px;
       font-weight: 800;
       color: #5b476e;
     }
 
-    .inventory-count {
+    .locker-count {
       font-size: 12px;
       font-weight: 800;
       color: #7d5fd3;
@@ -316,23 +354,23 @@
       border-radius: 999px;
     }
 
-    .inventory-grid {
+    .locker-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
     }
 
-    .inventory-empty {
+    .locker-empty {
       grid-column: 1 / -1;
       text-align: center;
-      padding: 22px 10px;
+      padding: 20px 10px;
       font-size: 13px;
       color: #9687a6;
       background: #faf8ff;
       border-radius: 16px;
     }
 
-    .inv-item {
+    .locker-slot {
       background: #faf8ff;
       border: 2px solid #ebe4ff;
       border-radius: 16px;
@@ -344,7 +382,7 @@
       cursor: pointer;
     }
 
-    .inv-item img {
+    .locker-slot img {
       width: 68px;
       height: 68px;
       object-fit: contain;
@@ -352,7 +390,7 @@
       background: #ffffff;
     }
 
-    .inv-item span {
+    .locker-slot span {
       font-size: 11.5px;
       font-weight: 700;
       color: #5a4659;
@@ -361,8 +399,8 @@
       word-break: keep-all;
     }
 
-    /* 결과 팝업 모달 */
-    .modal-bg {
+    /* 결과 모달 */
+    .popup-bg {
       position: fixed;
       inset: 0;
       background: rgba(62, 42, 62, 0.55);
@@ -371,14 +409,14 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      z-index: 200;
+      z-index: 300;
     }
 
-    .modal-bg.open {
+    .popup-bg.open {
       display: flex;
     }
 
-    .modal-box {
+    .popup-card {
       width: 100%;
       max-width: 340px;
       background: #ffffff;
@@ -389,7 +427,7 @@
       box-shadow: 0 18px 40px rgba(75, 42, 70, 0.28);
     }
 
-    .modal-badge {
+    .popup-badge {
       display: inline-block;
       background: #fff0f6;
       color: #d44984;
@@ -400,7 +438,7 @@
       margin-bottom: 12px;
     }
 
-    .modal-img-box {
+    .popup-img-box {
       width: 190px;
       height: 190px;
       margin: 0 auto 14px;
@@ -413,14 +451,14 @@
       overflow: hidden;
     }
 
-    .modal-img-box img {
+    .popup-img-box img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
       display: block;
     }
 
-    .modal-reward-name {
+    .popup-name {
       font-size: 19px;
       font-weight: 800;
       color: #4d374c;
@@ -428,7 +466,7 @@
       word-break: keep-all;
     }
 
-    .modal-close {
+    .popup-btn {
       width: 100%;
       padding: 12px;
       border: none;
@@ -443,76 +481,81 @@
 </head>
 <body>
 
-  <div class="app-container">
+  <div class="page-wrap">
+    <!-- 상단 포스터 -->
+    <div class="poster-card">
+      <img id="posterImg" src="" alt="가챠 상단 포스터" />
+    </div>
+
     <!-- 가챠 기계 -->
-    <div class="gacha-machine">
-      <div class="poster-frame">
-        <img id="posterImg" src="" alt="가챠 포스터" />
+    <div class="machine-body">
+      <div class="gacha-dome" id="gachaDome">
+        <div class="dome-gloss"></div>
+        <div class="dome-caps" id="domeCaps"></div>
       </div>
 
-      <div class="dome" id="dome">
-        <div class="dome-shine"></div>
-        <div class="dome-capsules" id="domeCapsules"></div>
+      <div class="status-msg" id="statusMsg">손잡이를 돌려 캡슐을 뽑아보세요!</div>
+
+      <div class="body-deck">
+        <div class="coin-box">
+          <div class="coin-slot-graphic"></div>
+          <div class="coin-badge" id="coinBadge">28 코인</div>
+          <button type="button" class="coin-add-btn" id="coinAddBtn">+ 코인 추가</button>
+        </div>
+
+        <div class="knob-wrap">
+          <button type="button" class="knob-btn" id="knobBtn" aria-label="가챠 손잡이 돌리기">
+            <div class="knob-bar">TURN</div>
+          </button>
+          <span class="knob-hint">돌려서 뽑기</span>
+        </div>
       </div>
 
-      <div class="guide-text" id="guideText">왼쪽 코인 투입구를 눌러 코인을 넣어주세요!</div>
-
-      <div class="bottom-deck">
-        <div class="deck-slot">
-          <span class="deck-tag">1. 코인 투입</span>
-          <button type="button" class="coin-btn" id="coinBtn">
-            <div class="coin-slot"></div>
-            <span class="coin-label" id="coinLabel">0 코인</span>
-          </button>
+      <div class="dispenser-area">
+        <div class="dispenser-info">
+          <div class="dispenser-title">캡슐 배출구</div>
+          <div class="dispenser-sub" id="dispenserSub">캡슐이 떨어지면 눌러서 열어보세요</div>
         </div>
-
-        <div class="deck-slot">
-          <span class="deck-tag">2. 손잡이 돌리기</span>
-          <button type="button" class="dial-btn" id="dialBtn" aria-label="손잡이 돌리기">
-            <div class="dial-handle">TURN</div>
-          </button>
-        </div>
-
-        <div class="deck-slot">
-          <span class="deck-tag">3. 캡슐 열기</span>
-          <div class="chute-box" id="chuteBox" role="button" tabindex="0" aria-label="배출구 캡슐 열기">
-            <div class="chute-capsule" id="chuteCapsule"></div>
-          </div>
+        <div class="dispenser-hole" id="dispenserHole" role="button" tabindex="0" aria-label="배출구 캡슐 열기">
+          <div class="out-capsule" id="outCapsule"></div>
         </div>
       </div>
     </div>
 
-    <!-- 친구/사용자 본인이 뽑은 상품 보관함 -->
-    <section class="inventory-section">
-      <div class="inventory-header">
-        <h2 class="inventory-title">🎒 내 보관함</h2>
-        <span class="inventory-count" id="inventoryCount">0개</span>
+    <!-- 보관함 -->
+    <section class="locker-card">
+      <div class="locker-top">
+        <h2 class="locker-title">🎒 내 보관함</h2>
+        <span class="locker-count" id="lockerCount">0개</span>
       </div>
-      <div class="inventory-grid" id="inventoryGrid">
-        <div class="inventory-empty">아직 뽑은 캡슐이 없어요. 가챠를 돌려보세요!</div>
+      <div class="locker-grid" id="lockerGrid">
+        <div class="locker-empty">아직 뽑은 캡슐이 없어요. 가챠를 돌려보세요!</div>
       </div>
     </section>
   </div>
 
   <!-- 결과 확인 팝업 -->
-  <div class="modal-bg" id="modalBg">
-    <div class="modal-box">
-      <span class="modal-badge">✨ 획득 완료!</span>
-      <div class="modal-img-box">
-        <img id="modalImg" src="" alt="상품 이미지" />
+  <div class="popup-bg" id="popupBg">
+    <div class="popup-card">
+      <span class="popup-badge">✨ 획득 완료!</span>
+      <div class="popup-img-box">
+        <img id="popupImg" src="" alt="뽑힌 상품 이미지" />
       </div>
-      <div class="modal-reward-name" id="modalRewardName">상품명</div>
-      <button type="button" class="modal-close" id="modalClose">확인</button>
+      <div class="popup-name" id="popupName">상품명</div>
+      <button type="button" class="popup-btn" id="popupBtn">확인</button>
     </div>
   </div>
 
   <script>
     /* =================================================================
-       [2] 상단 포스터 & 가챠 상품 설정 (여기서 수정하면 공유 시에도 적용됩니다)
+       [2] 기본 코인 · 상단 포스터 · 상품 설정 (여기서 수정하면 친구에게도 적용됩니다)
        ================================================================= */
 
+    // 기본 시작 코인 개수 (기본 28개)
+    const INITIAL_COINS = 28;
+
     // 상단 포스터 이미지 주소
-    const POSTER_URL = "https://placehold.co/800x350/ffd6e7/7a4b63?text=MY+PASTEL+GACHA";
+    const POSTER_IMAGE_URL = "https://placehold.co/800x350/ffd6e7/7a4b63?text=MY+PASTEL+GACHA";
 
     // 가챠 상품 목록 (name: 상품명, img: 결과 이미지 주소)
     const REWARDS = [
@@ -537,7 +580,7 @@
     /* =================================================================
        [3] 가챠 동작 & 도르륵 소리 & 보관함 로직
        ================================================================= */
-    const CAPSULE_COLORS = [
+    const CAP_COLORS = [
       "linear-gradient(180deg, #ff9ec6 50%, #ffffff 50%)",
       "linear-gradient(180deg, #b8a6ff 50%, #ffffff 50%)",
       "linear-gradient(180deg, #8fd8ff 50%, #ffffff 50%)",
@@ -545,31 +588,33 @@
       "linear-gradient(180deg, #9ce8c8 50%, #ffffff 50%)"
     ];
 
-    let coins = 0;
+    let coins = INITIAL_COINS;
     let isSpinning = false;
-    let pendingItem = null;
-    let collectedItems = [];
+    let pendingReward = null;
+    let myItems = [];
 
     const posterImg = document.getElementById("posterImg");
-    const dome = document.getElementById("dome");
-    const domeCapsules = document.getElementById("domeCapsules");
-    const guideText = document.getElementById("guideText");
-    const coinBtn = document.getElementById("coinBtn");
-    const coinLabel = document.getElementById("coinLabel");
-    const dialBtn = document.getElementById("dialBtn");
-    const chuteBox = document.getElementById("chuteBox");
-    const chuteCapsule = document.getElementById("chuteCapsule");
-    const inventoryCount = document.getElementById("inventoryCount");
-    const inventoryGrid = document.getElementById("inventoryGrid");
-    const modalBg = document.getElementById("modalBg");
-    const modalImg = document.getElementById("modalImg");
-    const modalRewardName = document.getElementById("modalRewardName");
-    const modalClose = document.getElementById("modalClose");
+    const gachaDome = document.getElementById("gachaDome");
+    const domeCaps = document.getElementById("domeCaps");
+    const statusMsg = document.getElementById("statusMsg");
+    const coinBadge = document.getElementById("coinBadge");
+    const coinAddBtn = document.getElementById("coinAddBtn");
+    const knobBtn = document.getElementById("knobBtn");
+    const dispenserSub = document.getElementById("dispenserSub");
+    const dispenserHole = document.getElementById("dispenserHole");
+    const outCapsule = document.getElementById("outCapsule");
+    const lockerCount = document.getElementById("lockerCount");
+    const lockerGrid = document.getElementById("lockerGrid");
+    const popupBg = document.getElementById("popupBg");
+    const popupImg = document.getElementById("popupImg");
+    const popupName = document.getElementById("popupName");
+    const popupBtn = document.getElementById("popupBtn");
 
-    posterImg.src = POSTER_URL;
+    posterImg.src = POSTER_IMAGE_URL;
+    coinBadge.textContent = `${coins} 코인`;
 
-    function initDomeCapsules() {
-      domeCapsules.innerHTML = "";
+    function buildDomeCaps() {
+      domeCaps.innerHTML = "";
       const coords = [
         { left: "8%", bottom: "10px", rot: -15 },
         { left: "22%", bottom: "14px", rot: 18 },
@@ -587,25 +632,24 @@
         { left: "58%", bottom: "82px", rot: -18 }
       ];
 
-      coords.forEach((c, i) => {
-        const el = document.createElement("div");
-        el.className = "mini-capsule";
-        el.style.left = c.left;
-        el.style.bottom = c.bottom;
-        el.style.transform = `rotate(${c.rot}deg)`;
-        el.style.background = CAPSULE_COLORS[i % CAPSULE_COLORS.length];
-        domeCapsules.appendChild(el);
+      coords.forEach((c, idx) => {
+        const div = document.createElement("div");
+        div.className = "cap-ball";
+        div.style.left = c.left;
+        div.style.bottom = c.bottom;
+        div.style.transform = `rotate(${c.rot}deg)`;
+        div.style.background = CAP_COLORS[idx % CAP_COLORS.length];
+        domeCaps.appendChild(div);
       });
     }
 
-    // 효과음 (코인 소리 / 도르륵 크랭크 소리 / 캡슐 팝 소리)
-    function playSound(kind) {
+    function playSound(type) {
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         const ctx = new AudioCtx();
         const now = ctx.currentTime;
 
-        if (kind === "coin") {
+        if (type === "coin") {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.connect(gain);
@@ -617,8 +661,7 @@
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
           osc.start(now);
           osc.stop(now + 0.25);
-        } else if (kind === "rattle") {
-          // 도르륵 연속 클릭/라쳇 소리
+        } else if (type === "rattle") {
           const clicks = 9;
           for (let i = 0; i < clicks; i++) {
             const t = now + i * 0.075;
@@ -634,7 +677,7 @@
             osc.start(t);
             osc.stop(t + 0.055);
           }
-        } else if (kind === "pop") {
+        } else if (type === "pop") {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.connect(gain);
@@ -651,112 +694,115 @@
       } catch (err) {}
     }
 
-    function renderInventory() {
-      inventoryCount.textContent = `${collectedItems.length}개`;
-      if (collectedItems.length === 0) {
-        inventoryGrid.innerHTML = `<div class="inventory-empty">아직 뽑은 캡슐이 없어요. 가챠를 돌려보세요!</div>`;
+    function renderLocker() {
+      lockerCount.textContent = `${myItems.length}개`;
+      if (myItems.length === 0) {
+        lockerGrid.innerHTML = `<div class="locker-empty">아직 뽑은 캡슐이 없어요. 가챠를 돌려보세요!</div>`;
         return;
       }
 
-      inventoryGrid.innerHTML = "";
-      collectedItems.forEach((item) => {
-        const card = document.createElement("div");
-        card.className = "inv-item";
-        card.innerHTML = `
+      lockerGrid.innerHTML = "";
+      myItems.forEach((item) => {
+        const slot = document.createElement("div");
+        slot.className = "locker-slot";
+        slot.innerHTML = `
           <img src="${item.img}" alt="${item.name}" />
           <span>${item.name}</span>
         `;
-        card.addEventListener("click", () => {
-          modalImg.src = item.img;
-          modalRewardName.textContent = item.name;
-          modalBg.classList.add("open");
+        slot.addEventListener("click", () => {
+          popupImg.src = item.img;
+          popupName.textContent = item.name;
+          popupBg.classList.add("open");
         });
-        inventoryGrid.appendChild(card);
+        lockerGrid.appendChild(slot);
       });
     }
 
-    coinBtn.addEventListener("click", () => {
+    coinAddBtn.addEventListener("click", () => {
       if (isSpinning) return;
       coins += 1;
-      coinLabel.textContent = `${coins} 코인`;
+      coinBadge.textContent = `${coins} 코인`;
       playSound("coin");
-      if (!pendingItem) {
-        guideText.textContent = "가운데 손잡이(TURN)를 눌러 돌려주세요!";
+      if (!pendingReward) {
+        statusMsg.textContent = "코인이 추가됐어요! 손잡이를 돌려보세요.";
       }
     });
 
-    dialBtn.addEventListener("click", () => {
+    knobBtn.addEventListener("click", () => {
       if (isSpinning) return;
 
-      if (pendingItem) {
-        guideText.textContent = "오른쪽 배출구 캡슐을 먼저 눌러 열어주세요!";
+      if (pendingReward) {
+        statusMsg.textContent = "아래 배출구 캡슐을 먼저 눌러 열어주세요!";
         return;
       }
 
       if (coins <= 0) {
-        guideText.textContent = "코인이 없어요! 왼쪽 투입구를 먼저 눌러주세요.";
+        statusMsg.textContent = "코인이 다 떨어졌어요! 왼쪽에서 코인을 추가해 보세요.";
         return;
       }
 
       coins -= 1;
-      coinLabel.textContent = `${coins} 코인`;
+      coinBadge.textContent = `${coins} 코인`;
       isSpinning = true;
-      guideText.textContent = "도르륵... 캡슐이 섞이고 있어요!";
+      statusMsg.textContent = "도르륵... 캡슐이 섞이고 있어요!";
+      dispenserSub.textContent = "캡슐이 굴러오는 중...";
       playSound("rattle");
 
-      dialBtn.classList.add("spinning");
-      dome.classList.add("shaking");
+      knobBtn.classList.add("turning");
+      gachaDome.classList.add("shaking");
 
       setTimeout(() => {
-        dialBtn.classList.remove("spinning");
-        dome.classList.remove("shaking");
+        knobBtn.classList.remove("turning");
+        gachaDome.classList.remove("shaking");
 
         const picked = REWARDS[Math.floor(Math.random() * REWARDS.length)];
-        pendingItem = { ...picked };
+        pendingReward = { ...picked };
 
-        chuteCapsule.style.background = CAPSULE_COLORS[Math.floor(Math.random() * CAPSULE_COLORS.length)];
-        chuteCapsule.classList.add("visible");
+        outCapsule.style.background = CAP_COLORS[Math.floor(Math.random() * CAP_COLORS.length)];
+        outCapsule.classList.add("show");
 
         isSpinning = false;
-        guideText.textContent = "캡슐이 나왔어요! 오른쪽 배출구 캡슐을 눌러보세요!";
+        statusMsg.textContent = "캡슐이 나왔어요! 오른쪽 배출구 캡슐을 눌러보세요!";
+        dispenserSub.textContent = "캡슐을 눌러 상품을 확인하세요!";
       }, 750);
     });
 
-    function openChuteCapsule() {
-      if (!pendingItem || isSpinning) return;
+    function openOutCapsule() {
+      if (!pendingReward || isSpinning) return;
       playSound("pop");
 
-      modalImg.src = pendingItem.img;
-      modalRewardName.textContent = pendingItem.name;
-      modalBg.classList.add("open");
+      popupImg.src = pendingReward.img;
+      popupName.textContent = pendingReward.name;
+      popupBg.classList.add("open");
 
-      collectedItems.unshift(pendingItem);
-      renderInventory();
+      myItems.unshift(pendingReward);
+      renderLocker();
 
-      chuteCapsule.classList.remove("visible");
-      pendingItem = null;
-      guideText.textContent = coins > 0
-        ? "손잡이를 한 번 더 돌릴 수 있어요!"
-        : "왼쪽 코인 투입구를 눌러 코인을 넣어주세요!";
+      outCapsule.classList.remove("show");
+      pendingReward = null;
+      dispenserSub.textContent = "캡슐이 떨어지면 눌러서 열어보세요";
+      statusMsg.textContent = coins > 0
+        ? "보관함에 저장됐어요! 또 돌려보세요."
+        : "코인이 없어요! 왼쪽에서 코인을 추가해 보세요.";
     }
 
-    chuteBox.addEventListener("click", openChuteCapsule);
-    chuteBox.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") openChuteCapsule();
+    dispenserHole.addEventListener("click", openOutCapsule);
+    dispenserHole.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") openOutCapsule();
     });
 
-    modalClose.addEventListener("click", () => {
-      modalBg.classList.remove("open");
+    popupBtn.addEventListener("click", () => {
+      popupBg.classList.remove("open");
     });
 
-    modalBg.addEventListener("click", (e) => {
-      if (e.target === modalBg) {
-        modalBg.classList.remove("open");
+    popupBg.addEventListener("click", (e) => {
+      if (e.target === popupBg) {
+        popupBg.classList.remove("open");
       }
     });
 
-    initDomeCapsules();
-    renderInventory();
+    buildDomeCaps();
+    renderLocker();
   </script>
 </body>
 </html>
